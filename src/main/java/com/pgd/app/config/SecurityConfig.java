@@ -14,10 +14,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                //.csrf(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
-                        authorizeHttpRequests.requestMatchers("/greetings")
-                                .permitAll());
+                        authorizeHttpRequests.requestMatchers("/**")
+                                .permitAll())
+                /*.authorizeHttpRequests((authorizeHttprequests) ->
+                        authorizeHttprequests.requestMatchers("/api/formulario/{**}")
+                                .permitAll())*/
+        ;
 
         return http.build();
     }

@@ -1,50 +1,95 @@
 package com.pgd.app.controller;
 
 
+import com.pgd.app.dto.FormularioFURAG.CreateFormularioFURAGDTO;
+import com.pgd.app.dto.FormularioFURAG.GetFormularioFURAGDTO;
+import com.pgd.app.dto.FormularioFURAG.UpdateFormularioFURAGDTO;
+import com.pgd.app.dto.PreguntaDTO;
+import com.pgd.app.model.FormularioFURAG;
+import com.pgd.app.model.Pregunta;
+import com.pgd.app.repository.FormularioFURAGRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class FormularioController {
 
-    // creating a logger
-    Logger logger = LoggerFactory.getLogger(FormularioController.class);
+    private final FormularioFURAGRepository formularioFURAGRepository;
 
-    @Value("${custom.property}")
-    private String myPropertyValue;
-
-    //Obtener datos base de formulario y preguntas asociadas
-    @GetMapping("/api/formulario")
-    public ResponseEntity<String> greetings()
-    {
-        // Logging various log level messages
-        logger.trace("Log level: TRACE");
-        logger.info("Log level: INFO");
-        logger.debug("Log level: DEBUG");
-        logger.error("Log level: ERROR");
-        logger.warn("Log level: WARN");
-
-        logger.info("custom property:" + myPropertyValue);
-
-        return ResponseEntity.ok("Request exitoso");
+    public FormularioController(FormularioFURAGRepository formularioFURAGRepository) {
+        this.formularioFURAGRepository = formularioFURAGRepository;
     }
 
-    @GetMapping("/goodBye")
-    public ResponseEntity<String> goodBye()
+    Logger logger = LoggerFactory.getLogger(FormularioController.class);
+
+    @GetMapping("/api/formularios")
+    public List<GetFormularioFURAGDTO> getAllFormularios()
     {
-        // Logging various log level messages
-        logger.trace("Log level: TRACE");
-        logger.info("Log level: INFO");
-        logger.debug("Log level: DEBUG");
-        logger.error("Log level: ERROR");
-        logger.warn("Log level: WARN");
 
-        logger.info("custom property:" + myPropertyValue);
+        return formularioFURAGRepository.findAll().stream().map(
+                formularioFURAG -> new GetFormularioFURAGDTO(
+                        formularioFURAG.getId(),
+                        formularioFURAG.getVigencia(),
+                        formularioFURAG.getPreguntas().stream().map(
+                                pregunta -> new PreguntaDTO(
+                                        pregunta.getId(),
+                                        pregunta.getEnunciado(),
+                                        pregunta.getElemento()
+                                )
+                        ).toList()
+                )
+        ).toList();
 
-        return ResponseEntity.ok("Request exitoso");
+    }
+
+    @GetMapping("/api/formulario/{id}")
+    public Optional<GetFormularioFURAGDTO> getFormularioById(@PathVariable Long id)
+    {
+
+        return formularioFURAGRepository.findById(id).map(
+                formularioFURAG ->
+                        new GetFormularioFURAGDTO(
+                                formularioFURAG.getId(),
+                                formularioFURAG.getVigencia(),
+                                formularioFURAG.getPreguntas().stream().map(
+                                        pregunta -> new PreguntaDTO(
+                                                pregunta.getId(),
+                                                pregunta.getEnunciado(),
+                                                pregunta.getEnunciado()
+                                        )
+                                ).toList()));
+    }
+
+    @PostMapping("/api/formulario")
+    public void createFormularioFURAG(@RequestBody CreateFormularioFURAGDTO formularioFURAGDTO) {
+
+        FormularioFURAG formularioFURAG = new FormularioFURAG(
+                formularioFURAGDTO.vigencia());
+        formularioFURAG.setPreguntas(formularioFURAGDTO.preguntas().stream().map(
+                preguntaDTO -> new Pregunta(preguntaDTO.id(), preguntaDTO.enunciado(), preguntaDTO.elemento(), formularioFURAG)
+        ).toList());
+        formularioFURAGRepository.save(formularioFURAG);
+    }
+
+    @PutMapping("/api/formulario")
+    public void editFormularioFURAG(@RequestBody UpdateFormularioFURAGDTO updateFormularioFURAGDTO) {
+
+        FormularioFURAG formularioFURAG = new FormularioFURAG();
+        formularioFURAG.setId(updateFormularioFURAGDTO.id());
+        formularioFURAG.setVigencia(updateFormularioFURAGDTO.vigencia());
+        formularioFURAG.setPreguntas(
+                updateFormularioFURAGDTO.preguntas().stream().map(
+                preguntaDTO -> new Pregunta(preguntaDTO.id(), preguntaDTO.enunciado(), preguntaDTO.elemento(), formularioFURAG)
+        ).toList());
+        formularioFURAGRepository.save(formularioFURAG);
+    }
+
+    @DeleteMapping("/api/formulario/{id}")
+    public void editFormularioFURAG(@PathVariable Long id) {
+        formularioFURAGRepository.deleteById(id);
     }
 }

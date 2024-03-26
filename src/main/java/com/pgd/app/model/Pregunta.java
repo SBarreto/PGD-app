@@ -1,9 +1,6 @@
 package com.pgd.app.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +21,7 @@ public class Pregunta {
 
     private String elemento;
 
-    @ManyToOne
+    @ManyToOne @JoinColumn(name = "idformulariofurag")
     private FormularioFURAG formularioFURAG;
+
 }

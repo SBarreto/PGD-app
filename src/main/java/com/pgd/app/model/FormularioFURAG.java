@@ -1,9 +1,6 @@
 package com.pgd.app.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,10 +19,15 @@ import java.util.List;
 public class FormularioFURAG {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Date vigencia;
 
-    @OneToMany
+    @OneToMany(mappedBy = "formularioFURAG", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Pregunta> preguntas;
+
+    public FormularioFURAG(Date vigencia) {
+        this.vigencia = vigencia;
+    }
 }
