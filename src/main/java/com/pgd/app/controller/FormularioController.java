@@ -10,6 +10,7 @@ import com.pgd.app.model.Pregunta;
 import com.pgd.app.repository.FormularioFURAGRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,9 +27,13 @@ public class FormularioController {
 
     Logger logger = LoggerFactory.getLogger(FormularioController.class);
 
+    @Value("${custom.property}")
+    private String propiedad;
+
     @GetMapping("/api/formularios")
     public List<GetFormularioFURAGDTO> getAllFormularios()
     {
+        logger.info(propiedad);
 
         return formularioFURAGRepository.findAll().stream().map(
                 formularioFURAG -> new GetFormularioFURAGDTO(
