@@ -8,32 +8,32 @@ import com.pgd.app.dto.PreguntaDTO;
 import com.pgd.app.model.FormularioFURAG;
 import com.pgd.app.model.Pregunta;
 import com.pgd.app.repository.FormularioFURAGRepository;
+import com.pgd.app.service.FormularioFURAGService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 public class FormularioController {
 
     private final FormularioFURAGRepository formularioFURAGRepository;
+    private final FormularioFURAGService formularioFURAGService;
 
-    public FormularioController(FormularioFURAGRepository formularioFURAGRepository) {
+    public FormularioController(FormularioFURAGRepository formularioFURAGRepository, FormularioFURAGService formularioFURAGService) {
         this.formularioFURAGRepository = formularioFURAGRepository;
+        this.formularioFURAGService = formularioFURAGService;
     }
 
     Logger logger = LoggerFactory.getLogger(FormularioController.class);
 
-    @Value("${custom.property}")
-    private String propiedad;
-
     @GetMapping("/api/formularios")
-    public List<GetFormularioFURAGDTO> getAllFormularios()
-    {
-        logger.info(propiedad);
+    public List<GetFormularioFURAGDTO> getAllFormularios() {
 
         return formularioFURAGRepository.findAll().stream().map(
                 formularioFURAG -> new GetFormularioFURAGDTO(
@@ -52,8 +52,7 @@ public class FormularioController {
     }
 
     @GetMapping("/api/formulario/{id}")
-    public Optional<GetFormularioFURAGDTO> getFormularioById(@PathVariable Long id)
-    {
+    public Optional<GetFormularioFURAGDTO> getFormularioById(@PathVariable Long id) {
 
         return formularioFURAGRepository.findById(id).map(
                 formularioFURAG ->
@@ -71,13 +70,7 @@ public class FormularioController {
 
     @PostMapping("/api/formulario")
     public void createFormularioFURAG(@RequestBody CreateFormularioFURAGDTO formularioFURAGDTO) {
-
-        FormularioFURAG formularioFURAG = new FormularioFURAG(
-                formularioFURAGDTO.vigencia());
-        formularioFURAG.setPreguntas(formularioFURAGDTO.preguntas().stream().map(
-                preguntaDTO -> new Pregunta(preguntaDTO.id(), preguntaDTO.enunciado(), preguntaDTO.elemento(), formularioFURAG)
-        ).toList());
-        formularioFURAGRepository.save(formularioFURAG);
+        formularioFURAGService.guardarFormularioFURAG(formularioFURAGDTO);
     }
 
     @PutMapping("/api/formulario")
@@ -88,8 +81,11 @@ public class FormularioController {
         formularioFURAG.setVigencia(updateFormularioFURAGDTO.vigencia());
         formularioFURAG.setPreguntas(
                 updateFormularioFURAGDTO.preguntas().stream().map(
-                preguntaDTO -> new Pregunta(preguntaDTO.id(), preguntaDTO.enunciado(), preguntaDTO.elemento(), formularioFURAG)
-        ).toList());
+                                preguntaDTO -> new Pregunta(
+                                        preguntaDTO.id(),
+                                        preguntaDTO.enunciado(),
+                                        preguntaDTO.elemento()))
+                        .collect(Collectors.toSet()));
         formularioFURAGRepository.save(formularioFURAG);
     }
 

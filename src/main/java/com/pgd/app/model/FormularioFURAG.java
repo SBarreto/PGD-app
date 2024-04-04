@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @AllArgsConstructor
@@ -24,10 +25,14 @@ public class FormularioFURAG {
 
     private Date vigencia;
 
-    @OneToMany(mappedBy = "formularioFURAG", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<Pregunta> preguntas;
+    @ManyToMany(mappedBy = "formulariosFURAG", cascade = {CascadeType.PERSIST})
+    private Set<Pregunta> preguntas;
+    @OneToMany(mappedBy = "formularioFURAG")
+    private Set<Respuesta> respuestas;
 
     public FormularioFURAG(Date vigencia) {
         this.vigencia = vigencia;
+        this.preguntas = new HashSet<>();
+        this.respuestas = new HashSet<>();
     }
 }
