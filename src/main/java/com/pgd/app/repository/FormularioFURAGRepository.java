@@ -1,12 +1,12 @@
 package com.pgd.app.repository;
 
 import com.pgd.app.model.FormularioFURAG;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface FormularioFURAGRepository extends CrudRepository<FormularioFURAG, Long> {
+public interface FormularioFURAGRepository extends JpaRepository<FormularioFURAG, Long> {
 
     List<FormularioFURAG> findAll();
     Optional<FormularioFURAG> findById(Long id);

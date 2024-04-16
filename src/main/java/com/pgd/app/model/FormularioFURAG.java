@@ -27,6 +27,7 @@ public class FormularioFURAG {
 
     @ManyToMany(mappedBy = "formulariosFURAG", cascade = {CascadeType.PERSIST})
     private Set<Pregunta> preguntas;
+
     @OneToMany(mappedBy = "formularioFURAG")
     private Set<Respuesta> respuestas;
 

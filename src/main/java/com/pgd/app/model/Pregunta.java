@@ -33,8 +33,10 @@ public class Pregunta {
 
     )
     private Set<FormularioFURAG> formulariosFURAG;
+
     @OneToMany(mappedBy = "pregunta")
     private Set<Respuesta> respuestas;
+
     public Pregunta(String id, String enunciado, String elemento) {
         this.id = id;
         this.enunciado = enunciado;

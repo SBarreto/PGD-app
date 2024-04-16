@@ -1,8 +1,9 @@
 package com.pgd.app.controller;
 
-import com.pgd.app.dto.RespuestaDTO;
+import com.pgd.app.dto.RespuestasFormularioDTO;
 import com.pgd.app.repository.RespuestaRepository;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -16,9 +17,16 @@ public class RespuestaController {
         this.respuestaRepository = respuestaRepository;
     }
 
-    @GetMapping("/api/respuestas")
-    public List<RespuestaDTO> getAllRespuestas() {
-        //return respuestaRepository.findAll();
-        return null;
+    @GetMapping("/api/respuestas/{idformulario}")
+    public List<RespuestasFormularioDTO> getRespuestasFromFormulario(@PathVariable long idformulario) {
+        return respuestaRepository.findAllByFormularioFURAG_Id(idformulario)
+                .stream().map(
+                        respuesta -> new RespuestasFormularioDTO(
+                               respuesta.getId(),
+                               respuesta.getTexto(),
+                               respuesta.getPregunta().getId(),
+                                respuesta.getVersion()
+                        )).toList();
     }
+
 }

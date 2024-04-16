@@ -18,12 +18,17 @@ public class Respuesta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private UUID id;
+
     private String texto;
+
     private int version;
+
     @ManyToOne
     @JoinColumn(name = "pregunta_id")
     private Pregunta pregunta;
+
     @ManyToOne
     @JoinColumn(name = "formulario_id")
     private FormularioFURAG formularioFURAG;

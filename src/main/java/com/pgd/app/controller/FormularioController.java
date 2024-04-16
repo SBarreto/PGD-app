@@ -11,12 +11,16 @@ import com.pgd.app.repository.FormularioFURAGRepository;
 import com.pgd.app.service.FormularioFURAGService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -74,7 +78,7 @@ public class FormularioController {
     }
 
     @PutMapping("/api/formulario")
-    public void editFormularioFURAG(@RequestBody UpdateFormularioFURAGDTO updateFormularioFURAGDTO) {
+    public void deleteFormularioFURAG(@RequestBody UpdateFormularioFURAGDTO updateFormularioFURAGDTO) {
 
         FormularioFURAG formularioFURAG = new FormularioFURAG();
         formularioFURAG.setId(updateFormularioFURAGDTO.id());
@@ -90,7 +94,21 @@ public class FormularioController {
     }
 
     @DeleteMapping("/api/formulario/{id}")
-    public void editFormularioFURAG(@PathVariable Long id) {
+    public void deleteFormularioFURAG(@PathVariable Long id) {
         formularioFURAGRepository.deleteById(id);
     }
+
+    /*@PostMapping("api/formulario/generar/{id}")
+    public ResponseEntity<Resource> generarArchivoFURAG(@PathVariable Long id) throws IOException {
+        File file = formularioFURAGService.generarArchivoFurag();
+        File fileExcel = formularioFURAGService.copyExcelFile(
+                "C:\\datawork\\PGDI\\backend\\PGD-app\\files\\Autodiagnostico Gobierno Digital V0.2.xlsx",
+                "C:\\datawork\\PGDI\\backend\\PGD-app\\files\\Autodiagnostico Gobierno Digital V0.3.xlsx");
+        Resource resource = new FileSystemResource(fileExcel);
+
+        return ResponseEntity.ok().header(
+                HttpHeaders.CONTENT_DISPOSITION, "attachmente; filename=\"" + fileExcel.getName() + "\"")
+                .body(resource);
+
+    }*/
 }
