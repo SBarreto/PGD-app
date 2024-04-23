@@ -1,4 +1,4 @@
-package com.pgd.app.dto;
+package com.pgd.app.dto.GE;
 
 public record CrearPreguntaGEDTO (
         String enunciado,

@@ -1,15 +1,11 @@
 package com.pgd.app.service;
 
-import com.pgd.app.dto.CrearPreguntaGEDTO;
+import com.pgd.app.dto.GE.CrearPreguntaGEDTO;
 import com.pgd.app.model.Pregunta;
 import com.pgd.app.model.PreguntaGE;
 import com.pgd.app.repository.PreguntaGERepository;
 import com.pgd.app.repository.PreguntaRepository;
 import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 @Service
 public class PreguntasGEService {

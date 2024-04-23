@@ -1,9 +1,12 @@
 create table if not exists entidad (
-    id bigserial not null,
+    codigosigep bigserial not null,
     nombre varchar not null,
-    codigo varchar not null,
-    codigodivipola varchar not null,
-    primary key (id)
+    naturaleza_juridica varchar not null,
+    orden varchar not null,
+    sector varchar not null,
+    codigomunicipio varchar not null,
+    codigodepartamento bigserial not null,
+    primary key (codigosigep)
 );
 
 create table if not exists municipio (
@@ -21,6 +24,7 @@ create table if not exists  departamento(
 create table if not exists formulariofurag(
     id bigserial not null,
     vigencia date not null,
+    entidad_id bigserial references entidad(codigosigep),
     primary key (id)
 );
 
@@ -33,8 +37,11 @@ create table if not exists pregunta (
 
 create table if not exists respuesta (
     id uuid not null default gen_random_uuid() primary key,
+    opcion_respuesta boolean not null,
     texto varchar not null,
     version int not null,
+    puntaje int not null,
+    evidencia varchar,
     pregunta_id varchar(255) references pregunta,
     formulario_id bigserial references formulariofurag
 );
@@ -56,7 +63,30 @@ create table if not exists pregunta_ge(
 create table if not exists respuesta_ge(
     id uuid not null,
     texto varchar,
+    opcion boolean,
     pregunta_ge_id varchar(255) references pregunta_ge,
     formulario_id bigserial references formulariofurag,
     primary key (id)
+);
+
+create table if not exists evidencia(
+    id uuid not null,
+    justificacion varchar not null,
+    respuesta_id uuid references respuesta,
+    primary key (id)
+);
+
+create table if not exists config_plantilla_furag(
+    pregunta_id varchar (255) not null,
+    texto varchar not null,
+    fila int not null,
+    primary key (pregunta_id)
+);
+
+create table if not exists puntaje (
+    id uuid not null,
+    valor numeric(5, 2) not null,
+    categoria varchar not null,
+    vigencia date not null,
+    entidad_id bigserial references entidad(codigosigep)
 );

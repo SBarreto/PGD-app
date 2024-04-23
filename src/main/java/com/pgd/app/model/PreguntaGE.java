@@ -1,13 +1,12 @@
 package com.pgd.app.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,5 +28,15 @@ public class PreguntaGE {
     @ManyToOne
     private Pregunta pregunta;
 
+    @OneToMany(mappedBy = "preguntaGE")
+    private Set<RespuestaGE> respuestasGE;
 
+
+    public PreguntaGE(String id, String enunciado, String evidenciaSugerida, String rolSugerido, Pregunta pregunta) {
+        this.id = id;
+        this.enunciado = enunciado;
+        this.evidenciaSugerida = evidenciaSugerida;
+        this.rolSugerido = rolSugerido;
+        this.pregunta = pregunta;
+    }
 }

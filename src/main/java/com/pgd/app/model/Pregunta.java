@@ -30,7 +30,6 @@ public class Pregunta {
             name = "pregunta_formulariofurag",
             joinColumns = @JoinColumn(name = "pregunta_id"),
             inverseJoinColumns = @JoinColumn(name = "formulario_id")
-
     )
     private Set<FormularioFURAG> formulariosFURAG;
 
@@ -44,6 +43,9 @@ public class Pregunta {
         this.formulariosFURAG = new HashSet<>();
         this.respuestas = new HashSet<>();
     }
+
+    @OneToMany(mappedBy = "pregunta")
+    private Set<PreguntaGE> preguntasGE;
 
     @Override
     public boolean equals(Object o) {

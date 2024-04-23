@@ -1,9 +1,9 @@
 package com.pgd.app.controller;
 
-import com.pgd.app.dto.CrearPreguntaGEDTO;
-import com.pgd.app.dto.CrearRespuestaGEDTO;
-import com.pgd.app.dto.GetPreguntaGEDTO;
-import com.pgd.app.dto.GetRespuestaGEDTO;
+import com.pgd.app.dto.GE.CrearPreguntaGEDTO;
+import com.pgd.app.dto.GE.CrearRespuestaGEDTO;
+import com.pgd.app.dto.GE.GetPreguntaGEDTO;
+import com.pgd.app.dto.GE.GetRespuestaGEDTO;
 import com.pgd.app.repository.PreguntaGERepository;
 import com.pgd.app.repository.RespuestaGERepository;
 import com.pgd.app.service.PreguntasGEService;
@@ -64,9 +64,9 @@ public class GestionExtendidaController {
                         respuestaGE.getFormularioFURAG().getId())).toList();
     }
 
-    @PostMapping("/api/gestionextendida/respuestasge")
-    public void createRespuestaGE(@RequestBody CrearRespuestaGEDTO crearRespuestaGEDTO) {
-        respuestaGEService.crearRespuestaGE(crearRespuestaGEDTO);
+    @PostMapping("/api/gestionextendida/respuestasge/{formulariofuragid}/{preguntageid}")
+    public void createRespuestaGE(@RequestBody CrearRespuestaGEDTO crearRespuestaGEDTO, @PathVariable Long formulariofuragid, @PathVariable String preguntageid) {
+        respuestaGEService.crearRespuestaGE(crearRespuestaGEDTO, formulariofuragid, preguntageid);
     }
 
     @DeleteMapping("/api/gestionextendida/respuestasge/{id}")

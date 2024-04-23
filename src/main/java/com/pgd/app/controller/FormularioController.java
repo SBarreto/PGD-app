@@ -9,8 +9,9 @@ import com.pgd.app.model.FormularioFURAG;
 import com.pgd.app.model.Pregunta;
 import com.pgd.app.repository.FormularioFURAGRepository;
 import com.pgd.app.service.FormularioFURAGService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.pgd.app.service.PuntajeService;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -28,14 +29,22 @@ public class FormularioController {
 
     private final FormularioFURAGRepository formularioFURAGRepository;
     private final FormularioFURAGService formularioFURAGService;
+    private final PuntajeService puntajeService;
 
-    public FormularioController(FormularioFURAGRepository formularioFURAGRepository, FormularioFURAGService formularioFURAGService) {
+    @Value("${ruta.archivo.plantilla}")
+    private String rutaArchivoPlantilla;
+
+    @Value("${ruta.archivo.formulariogenerado}")
+    private String rutaArchivoGenerado;
+
+    public FormularioController(FormularioFURAGRepository formularioFURAGRepository, FormularioFURAGService formularioFURAGService, PuntajeService puntajeService) {
         this.formularioFURAGRepository = formularioFURAGRepository;
         this.formularioFURAGService = formularioFURAGService;
+        this.puntajeService = puntajeService;
     }
 
-    Logger logger = LoggerFactory.getLogger(FormularioController.class);
 
+    @Operation(summary = "Tomar todos los formularios, este endpoint es mas de prueba, no va a haber caso de uso real para traer todos los formularios guardados")
     @GetMapping("/api/formularios")
     public List<GetFormularioFURAGDTO> getAllFormularios() {
 
@@ -55,6 +64,7 @@ public class FormularioController {
 
     }
 
+    @Operation(summary = "Tomar un formulario FURAG y todas sus preguntas asociadas")
     @GetMapping("/api/formulario/{id}")
     public Optional<GetFormularioFURAGDTO> getFormularioById(@PathVariable Long id) {
 
@@ -67,16 +77,18 @@ public class FormularioController {
                                         pregunta -> new PreguntaDTO(
                                                 pregunta.getId(),
                                                 pregunta.getEnunciado(),
-                                                pregunta.getEnunciado()
+                                                pregunta.getElemento()
                                         )
                                 ).toList()));
     }
 
+    @Operation(summary = "Crear un nuevo formulario FURAG, puede venir con preguntas")
     @PostMapping("/api/formulario")
     public void createFormularioFURAG(@RequestBody CreateFormularioFURAGDTO formularioFURAGDTO) {
         formularioFURAGService.guardarFormularioFURAG(formularioFURAGDTO);
     }
 
+    @Operation(summary = "Editar un formulario FURAG o sus preguntas")
     @PutMapping("/api/formulario")
     public void deleteFormularioFURAG(@RequestBody UpdateFormularioFURAGDTO updateFormularioFURAGDTO) {
 
@@ -93,22 +105,26 @@ public class FormularioController {
         formularioFURAGRepository.save(formularioFURAG);
     }
 
+    @Operation(summary = "Borrar un formulario FURAG")
     @DeleteMapping("/api/formulario/{id}")
     public void deleteFormularioFURAG(@PathVariable Long id) {
         formularioFURAGRepository.deleteById(id);
     }
 
-    /*@PostMapping("api/formulario/generar/{id}")
+    @Operation(summary = "Generar el archivo excel de un formulario FURAG a partir de las preguntas de gestion extendida respondidas" +
+            "se calculan puntajes y se genea campo de observaciones")
+    @PostMapping("api/formulario/generar/{id}")
     public ResponseEntity<Resource> generarArchivoFURAG(@PathVariable Long id) throws IOException {
-        File file = formularioFURAGService.generarArchivoFurag();
-        File fileExcel = formularioFURAGService.copyExcelFile(
-                "C:\\datawork\\PGDI\\backend\\PGD-app\\files\\Autodiagnostico Gobierno Digital V0.2.xlsx",
-                "C:\\datawork\\PGDI\\backend\\PGD-app\\files\\Autodiagnostico Gobierno Digital V0.3.xlsx");
+        formularioFURAGService.generarObservacionesFormularioFURAG(id);
+        File fileExcel = formularioFURAGService.generarArchivoFurag(
+                rutaArchivoPlantilla,
+                rutaArchivoGenerado,
+                id);
+        puntajeService.calcularPuntajes(id);
         Resource resource = new FileSystemResource(fileExcel);
 
         return ResponseEntity.ok().header(
                 HttpHeaders.CONTENT_DISPOSITION, "attachmente; filename=\"" + fileExcel.getName() + "\"")
                 .body(resource);
-
-    }*/
+    }
 }

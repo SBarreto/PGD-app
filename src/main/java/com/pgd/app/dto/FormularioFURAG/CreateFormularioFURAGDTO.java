@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 public record CreateFormularioFURAGDTO(
+        int codigoEntidad,
         Date vigencia,
         List<PreguntaDTO> preguntas) {
 }

@@ -22,6 +22,8 @@ public class RespuestaGE {
 
     private String texto;
 
+    private boolean opcion;
+
     @ManyToOne
     @JoinColumn(name = "pregunta_ge_id")
     private PreguntaGE preguntaGE;
@@ -30,9 +32,12 @@ public class RespuestaGE {
     @JoinColumn(name = "formulario_id")
     private FormularioFURAG formularioFURAG;
 
-    public RespuestaGE(String texto, PreguntaGE preguntaGE, FormularioFURAG formularioFURAG) {
+    public RespuestaGE(String texto, boolean opcion, PreguntaGE preguntaGE, FormularioFURAG formularioFURAG) {
         this.texto = texto;
+        this.opcion = opcion;
         this.preguntaGE = preguntaGE;
         this.formularioFURAG = formularioFURAG;
     }
+
+
 }
