@@ -2,7 +2,7 @@ package com.pgd.app.service;
 
 import com.pgd.app.Exception.EntidadNotFoundException;
 import com.pgd.app.Exception.FormularioNotFoundException;
-import com.pgd.app.dto.FormularioFURAG.CreateFormularioFURAGDTO;
+import com.pgd.app.dto.Formulariofurag.CreateFormularioFURAGDTO;
 import com.pgd.app.model.*;
 import com.pgd.app.repository.*;
 import jakarta.transaction.Transactional;

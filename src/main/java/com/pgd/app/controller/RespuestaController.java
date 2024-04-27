@@ -1,6 +1,6 @@
 package com.pgd.app.controller;
 
-import com.pgd.app.dto.GE.ResponderPreguntasGEDTO;
+import com.pgd.app.dto.ge.ResponderPreguntasGEDTO;
 import com.pgd.app.dto.RespuestasFormularioDTO;
 import com.pgd.app.repository.RespuestaRepository;
 import com.pgd.app.service.RespuestaGEService;

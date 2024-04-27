@@ -1,9 +1,9 @@
 package com.pgd.app.controller;
 
 
-import com.pgd.app.dto.FormularioFURAG.CreateFormularioFURAGDTO;
-import com.pgd.app.dto.FormularioFURAG.GetFormularioFURAGDTO;
-import com.pgd.app.dto.FormularioFURAG.UpdateFormularioFURAGDTO;
+import com.pgd.app.dto.Formulariofurag.CreateFormularioFURAGDTO;
+import com.pgd.app.dto.Formulariofurag.GetFormularioFURAGDTO;
+import com.pgd.app.dto.Formulariofurag.UpdateFormularioFURAGDTO;
 import com.pgd.app.dto.PreguntaDTO;
 import com.pgd.app.model.FormularioFURAG;
 import com.pgd.app.model.Pregunta;

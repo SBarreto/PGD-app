@@ -1,6 +1,6 @@
 package com.pgd.app.service;
 
-import com.pgd.app.dto.GE.CrearPreguntaGEDTO;
+import com.pgd.app.dto.ge.CrearPreguntaGEDTO;
 import com.pgd.app.model.Pregunta;
 import com.pgd.app.model.PreguntaGE;
 import com.pgd.app.repository.PreguntaGERepository;

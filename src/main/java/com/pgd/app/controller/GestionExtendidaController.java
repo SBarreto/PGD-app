@@ -1,9 +1,9 @@
 package com.pgd.app.controller;
 
-import com.pgd.app.dto.GE.CrearPreguntaGEDTO;
-import com.pgd.app.dto.GE.CrearRespuestaGEDTO;
-import com.pgd.app.dto.GE.GetPreguntaGEDTO;
-import com.pgd.app.dto.GE.GetRespuestaGEDTO;
+import com.pgd.app.dto.ge.CrearPreguntaGEDTO;
+import com.pgd.app.dto.ge.CrearRespuestaGEDTO;
+import com.pgd.app.dto.ge.GetPreguntaGEDTO;
+import com.pgd.app.dto.ge.GetRespuestaGEDTO;
 import com.pgd.app.repository.PreguntaGERepository;
 import com.pgd.app.repository.RespuestaGERepository;
 import com.pgd.app.service.PreguntasGEService;

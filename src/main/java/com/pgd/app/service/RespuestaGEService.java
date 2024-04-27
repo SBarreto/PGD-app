@@ -1,7 +1,7 @@
 package com.pgd.app.service;
 
-import com.pgd.app.dto.GE.CrearRespuestaGEDTO;
-import com.pgd.app.dto.GE.ResponderPreguntasGEDTO;
+import com.pgd.app.dto.ge.CrearRespuestaGEDTO;
+import com.pgd.app.dto.ge.ResponderPreguntasGEDTO;
 import com.pgd.app.model.RespuestaGE;
 import com.pgd.app.repository.FormularioFURAGRepository;
 import com.pgd.app.repository.PreguntaGERepository;
