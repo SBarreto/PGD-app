@@ -20,7 +20,7 @@ public class RespuestaGE {
     @GeneratedValue(generator = "UUID")
     private UUID id;
 
-    private String texto;
+    private String evidencia;
 
     private boolean opcion;
 
@@ -33,7 +33,7 @@ public class RespuestaGE {
     private FormularioFURAG formularioFURAG;
 
     public RespuestaGE(String texto, boolean opcion, PreguntaGE preguntaGE, FormularioFURAG formularioFURAG) {
-        this.texto = texto;
+        this.evidencia = texto;
         this.opcion = opcion;
         this.preguntaGE = preguntaGE;
         this.formularioFURAG = formularioFURAG;

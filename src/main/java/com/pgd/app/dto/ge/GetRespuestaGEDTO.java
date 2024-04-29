@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public record GetRespuestaGEDTO(
         UUID id,
-        String texto,
+        String evidencia,
         String preguntaGEID,
         Long formularioFuragId) {
 }

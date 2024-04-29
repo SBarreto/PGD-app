@@ -1,7 +1,6 @@
 package com.pgd.app.controller;
 
-import com.pgd.app.Exception.EntidadNotFoundException;
-import com.pgd.app.Exception.FormularioNotFoundException;
+import com.pgd.app.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,5 +17,30 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FormularioNotFoundException.class)
     public ResponseEntity<String> handleFormularioNotFoundException(FormularioNotFoundException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+    @ExceptionHandler(UsuarioYaExisteException.class)
+    public ResponseEntity<String> handleUsuarioYaExisteException(UsuarioYaExisteException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(UsuarioNoEncontradoException.class)
+    public ResponseEntity<String> handleUsuarioNoExisteException(UsuarioNoEncontradoException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler(ContrasenaIncorrectaException.class)
+    public ResponseEntity<String> handleContrasenaIncorrectaException(ContrasenaIncorrectaException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler(PreguntaFURAGNotFoundException.class)
+    public ResponseEntity<String> handlePreguntaFURAGNotFoundException(PreguntaFURAGNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(RespuestaGENotFoundException.class)
+    public ResponseEntity<String> handleRespuestaGENotFoundException(RespuestaGENotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }

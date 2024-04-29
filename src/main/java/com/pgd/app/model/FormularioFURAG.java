@@ -31,7 +31,8 @@ public class FormularioFURAG {
     @OneToMany(mappedBy = "formularioFURAG")
     private Set<Respuesta> respuestas;
 
-    @ManyToOne@JoinColumn(name = "entidad_id")
+    @ManyToOne
+    @JoinColumn(name = "entidad_id")
     private Entidad entidad;
 
     public FormularioFURAG(Date vigencia) {

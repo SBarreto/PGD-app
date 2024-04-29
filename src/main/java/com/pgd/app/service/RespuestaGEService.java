@@ -1,7 +1,9 @@
 package com.pgd.app.service;
 
+import com.pgd.app.exception.RespuestaGENotFoundException;
 import com.pgd.app.dto.ge.CrearRespuestaGEDTO;
 import com.pgd.app.dto.ge.ResponderPreguntasGEDTO;
+import com.pgd.app.dto.ge.UpdateRespuestaGEDTO;
 import com.pgd.app.model.RespuestaGE;
 import com.pgd.app.repository.FormularioFURAGRepository;
 import com.pgd.app.repository.PreguntaGERepository;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class RespuestaGEService {
@@ -28,7 +31,7 @@ public class RespuestaGEService {
     public void crearRespuestaGE(CrearRespuestaGEDTO crearRespuestaGEDTO, Long formularioFURAGId, String preguntaGEId) {
 
         RespuestaGE respuestaGE = new RespuestaGE(
-                crearRespuestaGEDTO.texto(),
+                crearRespuestaGEDTO.evidencia(),
                 crearRespuestaGEDTO.opcion(),
                 preguntaGERepository.getReferenceById(preguntaGEId),
                 formularioFURAGRepository.getReferenceById(formularioFURAGId)
@@ -42,7 +45,7 @@ public class RespuestaGEService {
         responderPreguntasGEDTO.respuestasGEDTO().forEach(
                 crearRespuestaGEDTO -> {
                     RespuestaGE respuestaGE = new RespuestaGE(
-                            crearRespuestaGEDTO.texto(),
+                            crearRespuestaGEDTO.evidencia(),
                             crearRespuestaGEDTO.opcion(),
                             preguntaGERepository.getReferenceById(crearRespuestaGEDTO.preguntaGEID()),
                             formularioFURAGRepository.getReferenceById(responderPreguntasGEDTO.formularioFURAGID())
@@ -54,5 +57,15 @@ public class RespuestaGEService {
                 }
         );
         respuestaGERepository.saveAll(respuestasGEToSave);
+    }
+
+    public void updateRespuestaGE(UpdateRespuestaGEDTO updateRespuestaGEDTO, UUID respuestageid) {
+        if (!respuestaGERepository.existsById(respuestageid))
+            throw new RespuestaGENotFoundException("ID de respuesta de gestion extendida no encontrado");
+        RespuestaGE respuestaGE = new RespuestaGE();
+        respuestaGE.setId(respuestageid);
+        respuestaGE.setOpcion(updateRespuestaGEDTO.opcion());
+        respuestaGE.setEvidencia(updateRespuestaGEDTO.evidencia());
+        respuestaGERepository.save(respuestaGE);
     }
 }

@@ -36,9 +36,4 @@ public class InfoEntidadesController {
         );
     }
 
-    public ResponseEntity<> getAllMunicipios() {}
-
-    public ResponseEntity<> getAllDepartamentos() {}
-
-
 }

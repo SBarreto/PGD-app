@@ -1,4 +1,4 @@
-package com.pgd.app.Exception;
+package com.pgd.app.exception;
 
 public class FormularioNotFoundException extends RuntimeException {
     public FormularioNotFoundException(String message) {

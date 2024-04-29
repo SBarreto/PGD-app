@@ -1,7 +1,7 @@
 package com.pgd.app.service;
 
-import com.pgd.app.Exception.EntidadNotFoundException;
-import com.pgd.app.Exception.FormularioNotFoundException;
+import com.pgd.app.exception.EntidadNotFoundException;
+import com.pgd.app.exception.FormularioNotFoundException;
 import com.pgd.app.dto.puntaje.GetPuntajesEntidadDTO;
 import com.pgd.app.dto.puntaje.PuntajeEntidadDTO;
 import com.pgd.app.model.Entidad;

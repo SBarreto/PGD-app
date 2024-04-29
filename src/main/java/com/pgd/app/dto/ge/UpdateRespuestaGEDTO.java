@@ -1,6 +1,5 @@
 package com.pgd.app.dto.ge;
 
-public record CrearRespuestaGEDTO(
-        String preguntaGEID,
+public record UpdateRespuestaGEDTO(
         String evidencia,
         boolean opcion) { }

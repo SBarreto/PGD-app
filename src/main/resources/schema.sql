@@ -62,7 +62,7 @@ create table if not exists pregunta_ge(
 
 create table if not exists respuesta_ge(
     id uuid not null,
-    texto varchar,
+    evidencia varchar,
     opcion boolean,
     pregunta_ge_id varchar(255) references pregunta_ge,
     formulario_id bigserial references formulariofurag,
@@ -71,7 +71,7 @@ create table if not exists respuesta_ge(
 
 create table if not exists evidencia(
     id uuid not null,
-    justificacion varchar not null,
+    texto varchar not null,
     respuesta_id uuid references respuesta,
     primary key (id)
 );
@@ -89,4 +89,13 @@ create table if not exists puntaje (
     categoria varchar not null,
     vigencia date not null,
     entidad_id bigserial references entidad(codigosigep)
+);
+
+create table if not exists usuario (
+    id bigserial not null,
+    username varchar not null,
+    password varchar not null,
+    tipo varchar not null,
+    entidad_id bigserial references entidad(codigosigep),
+    primary key (id)
 );

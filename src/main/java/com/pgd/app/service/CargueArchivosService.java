@@ -1,7 +1,7 @@
 package com.pgd.app.service;
 
 import com.opencsv.exceptions.CsvException;
-import com.pgd.app.Exception.FormularioNotFoundException;
+import com.pgd.app.exception.FormularioNotFoundException;
 import com.pgd.app.Util.CSVUtil;
 import com.pgd.app.model.FormularioFURAG;
 import com.pgd.app.model.Pregunta;
@@ -33,9 +33,6 @@ public class CargueArchivosService {
             List<Pregunta> preguntasToAdd = new ArrayList<>();
             List<String[]> filas =  CSVUtil.readCsv(archivo);
             filas.forEach(string -> {
-                /*if (preguntaRepository.existsById(string[0])) {
-
-                }*/
                 Pregunta pregunta = new Pregunta(
                         string[0],
                         string[1],

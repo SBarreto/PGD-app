@@ -1,7 +1,7 @@
 package com.pgd.app.service;
 
-import com.pgd.app.Exception.EntidadNotFoundException;
-import com.pgd.app.Exception.FormularioNotFoundException;
+import com.pgd.app.exception.EntidadNotFoundException;
+import com.pgd.app.exception.FormularioNotFoundException;
 import com.pgd.app.dto.Formulariofurag.CreateFormularioFURAGDTO;
 import com.pgd.app.model.*;
 import com.pgd.app.repository.*;
@@ -113,7 +113,7 @@ public class FormularioFURAGService {
         //primero: se deben tomar las preguntas respondidas del formulario
         //segundo: para cada pregunta, se deben tomar las preguntas de gestion extendida asociadas respondidas
         //tercero: para cada pregunta de gestion extendida, se debe saber las respuestas de gestion extendida
-        //cuarto: generar el campo/texto de obervaciones:
+        //cuarto: generar el campo/evidencia de obervaciones:
         //incluir que se tomaron acciones dependiendo de la respuesta positiva de cada pregunta de gestion extendida
         //incluir el link de las evidencias que el usuario adjuntó
         //quinto: generar el campo de puntaje:
@@ -137,7 +137,13 @@ public class FormularioFURAGService {
                                     preguntaGE.getRespuestasGE().forEach(
                                             respuestaGE -> {
                                                 if (respuestaGE.isOpcion()) {
-                                                    stringBuilder.append(preguntaGE.getEnunciado()).append("\n");
+                                                    stringBuilder
+                                                            .append(preguntaGE.getEnunciado())
+                                                            .append("\n")
+                                                            .append("Evidencia: ")
+                                                            .append(respuestaGE.getEvidencia())
+                                                            .append("\n")
+                                                    ;
                                                     numPositivas.getAndIncrement();
                                                 }
                                             });

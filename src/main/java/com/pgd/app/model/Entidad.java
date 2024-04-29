@@ -40,4 +40,7 @@ public class Entidad {
 
     @OneToMany(mappedBy = "entidad")
     private Set<FormularioFURAG> formulariosFURAG;
+
+    @OneToMany(mappedBy = "entidad")
+    private Set<Usuario> usuarios;
 }

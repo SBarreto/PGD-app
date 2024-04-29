@@ -41,7 +41,7 @@ values (
 insert into respuesta_ge
 values (
         gen_random_uuid(),
-        'texto de esta respuesta',
+        'evidencia de esta respuesta',
         true,
         'GDI123GE1',
         67
@@ -208,11 +208,11 @@ values ('GDI260AGE1', 'El comité de gestión y desempeño aprobó los entregabl
        ('GDI262HGE5', 'Promoción de habilitadores y la relación con la transformación digital a los participantes del comité?', 'evidencia sugerida pdf', 'rol sugerido xxxx', 'GDI262H');
 
 insert into respuesta_ge
-values (gen_random_uuid(), 'texto de esta respuesta', true, 'GDI260AGE1', 67),
-       (gen_random_uuid(), 'texto de esta respuesta', false, 'GDI260AGE2', 67),
-       (gen_random_uuid(), 'texto de esta respuesta', true, 'GDI260AGE3', 67),
-       (gen_random_uuid(), 'texto de esta respuesta', true, 'GDI260AGE4', 67),
-       (gen_random_uuid(), 'texto de esta respuesta', true, 'GDI260AGE5', 67);
+values (gen_random_uuid(), 'evidencia de esta respuesta', true, 'GDI260AGE1', 67),
+       (gen_random_uuid(), 'evidencia de esta respuesta', false, 'GDI260AGE2', 67),
+       (gen_random_uuid(), 'evidencia de esta respuesta', true, 'GDI260AGE3', 67),
+       (gen_random_uuid(), 'evidencia de esta respuesta', true, 'GDI260AGE4', 67),
+       (gen_random_uuid(), 'evidencia de esta respuesta', true, 'GDI260AGE5', 67);
 
 insert into puntaje
 values (gen_random_uuid(), 78, 'Transformacion Digital', '2017-03-14', 2);
