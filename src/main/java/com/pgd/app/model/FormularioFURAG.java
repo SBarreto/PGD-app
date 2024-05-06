@@ -35,6 +35,9 @@ public class FormularioFURAG {
     @JoinColumn(name = "entidad_id")
     private Entidad entidad;
 
+    @OneToMany(mappedBy = "formularioFURAG")
+    private Set<RespuestaGE> respuestasGE;
+
     public FormularioFURAG(Date vigencia) {
         this.vigencia = vigencia;
         this.preguntas = new HashSet<>();

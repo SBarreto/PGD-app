@@ -1,13 +1,16 @@
 package com.pgd.app.service;
 
+import com.pgd.app.client.ChatGPTClient;
 import com.pgd.app.exception.EntidadNotFoundException;
 import com.pgd.app.exception.FormularioNotFoundException;
 import com.pgd.app.dto.Formulariofurag.CreateFormularioFURAGDTO;
+import com.pgd.app.exception.FormularioSinRespuestasException;
 import com.pgd.app.model.*;
 import com.pgd.app.repository.*;
 import jakarta.transaction.Transactional;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -20,18 +23,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class FormularioFURAGService {
 
+    @Value("${texto.generacion.observaciones}")
+    private String prompt;
+
     private final FormularioFURAGRepository formularioFURAGRepository;
     private final PreguntaRepository preguntaRepository;
     private final RespuestaRepository respuestaRepository;
     private final ConfigPlantillaFuragRepository configPlantillaFuragRepository;
     private final EntidadRepository entidadRepository;
+    private final ChatGPTClient chatGPTClient;
 
-    public FormularioFURAGService(FormularioFURAGRepository formularioFURAGRepository, PreguntaRepository preguntaRepository, RespuestaRepository respuestaRepository, ConfigPlantillaFuragRepository configPlantillaFuragRepository, EntidadRepository entidadRepository) {
+    public FormularioFURAGService(FormularioFURAGRepository formularioFURAGRepository, PreguntaRepository preguntaRepository, RespuestaRepository respuestaRepository, ConfigPlantillaFuragRepository configPlantillaFuragRepository, EntidadRepository entidadRepository, ChatGPTClient chatGPTClient) {
         this.formularioFURAGRepository = formularioFURAGRepository;
         this.preguntaRepository = preguntaRepository;
         this.respuestaRepository = respuestaRepository;
         this.configPlantillaFuragRepository = configPlantillaFuragRepository;
         this.entidadRepository = entidadRepository;
+        this.chatGPTClient = chatGPTClient;
     }
 
     public void guardarFormularioFURAG(CreateFormularioFURAGDTO formularioFURAGDTO) {
@@ -97,9 +105,9 @@ public class FormularioFURAGService {
                 );
             }
 
+            sheet.autoSizeColumn(5);
+            sheet.autoSizeColumn(6);
             //Generar puntajes
-
-
             workbook.write(fos);
             //cerrar todos los flujos
             fos.close();
@@ -121,29 +129,37 @@ public class FormularioFURAGService {
         //puntaje calculado: Tiene preguntas de gestion extendida respondidas ya sea si o no
         //puntaje = 1: Tiene preguntas de gestion extendida respondidas todas en no
         //puntaje = 0: No tiene preguntas de gestion extendida respondidas
+
+        //Si se vuelve a generar el formulario, limpiar primero las respuestas generadas
         respuestaRepository.deleteAllByFormularioFURAG_Id(formularioFURAGId);
         FormularioFURAG formularioFURAG = formularioFURAGRepository.findById(formularioFURAGId)
                 .orElseThrow(() -> new FormularioNotFoundException("Id de formulario no encontrado"));
+        if (formularioFURAG.getRespuestasGE().isEmpty()) {
+            throw new FormularioSinRespuestasException("Este formulario no tiene respuestas de gestion extendida asociadas a ninguna de sus preguntas, no se puede generar plantilla diligenciada");
+        }
         Set<Pregunta> preguntasFURAG = formularioFURAG.getPreguntas();
         preguntasFURAG.forEach(
                 pregunta -> {
-                    StringBuilder stringBuilder = new StringBuilder();
+                    StringBuilder stringBuilderOberservaciones = new StringBuilder(prompt + " ");
+                    StringBuilder stringBuilderEvidencias = new StringBuilder("Evidencias: ");
                     AtomicInteger numPositivas = new AtomicInteger();
                     AtomicBoolean preguntaGEHasRespuestas = new AtomicBoolean(false);
                     pregunta.getPreguntasGE().forEach(
                             preguntaGE -> {
                                 if (!preguntaGE.getRespuestasGE().isEmpty()) {
                                     preguntaGEHasRespuestas.set(true);
-                                    preguntaGE.getRespuestasGE().forEach(
+                                    //filtrar todas las respuestas de gestion extendidas para que solo queden las de este formulario
+                                    preguntaGE.getRespuestasGE().stream().filter(
+                                            respuestaGE -> respuestaGE.getFormularioFURAG().getId() == formularioFURAGId
+                                    ).toList().forEach(
                                             respuestaGE -> {
                                                 if (respuestaGE.isOpcion()) {
-                                                    stringBuilder
+                                                    stringBuilderOberservaciones
                                                             .append(preguntaGE.getEnunciado())
-                                                            .append("\n")
-                                                            .append("Evidencia: ")
+                                                            .append("\n");
+                                                    stringBuilderEvidencias
                                                             .append(respuestaGE.getEvidencia())
-                                                            .append("\n")
-                                                    ;
+                                                            .append("\n");
                                                     numPositivas.getAndIncrement();
                                                 }
                                             });
@@ -154,12 +170,22 @@ public class FormularioFURAGService {
                     Respuesta respuesta = new Respuesta();
                     respuesta.setFormularioFURAG(formularioFURAG);
                     respuesta.setPregunta(pregunta);
-                    respuesta.setTexto(stringBuilder.toString());
+
+                    //Construir las observaciones con chatgpt y luego adjuntar links de evidencias si la pregunta tiene respuestas
+                    if (preguntaGEHasRespuestas.get()) {
+                        String respuestasYEvidencias = chatGPTClient.promptObservaciones(String.valueOf(stringBuilderOberservaciones)) +
+                                "\n" +
+                                stringBuilderEvidencias;
+                        respuesta.setTexto(respuestasYEvidencias);
+                    } else
+                        respuesta.setTexto("No existen respuestas de gestion extendida para esta pregunta ni evidencias.");
+
                     if (preguntaGEHasRespuestas.get() && numPositivas.get() > 0) {
                         puntajeCalculado = (numPositivas.get() * 100) / pregunta.getPreguntasGE().size();
                     } else if (preguntaGEHasRespuestas.get()) {
                         puntajeCalculado = 1;
                     }
+
                     respuesta.setPuntaje(puntajeCalculado);
                     respuestaRepository.save(respuesta);
                 });

@@ -1,5 +1,7 @@
 package com.pgd.app.service;
 
+import com.pgd.app.exception.FormularioNotFoundException;
+import com.pgd.app.exception.PreguntaGENotFoundException;
 import com.pgd.app.exception.RespuestaGENotFoundException;
 import com.pgd.app.dto.ge.CrearRespuestaGEDTO;
 import com.pgd.app.dto.ge.ResponderPreguntasGEDTO;
@@ -41,9 +43,14 @@ public class RespuestaGEService {
     }
 
     public void crearRespuestasPreguntaGE(ResponderPreguntasGEDTO responderPreguntasGEDTO) {
+        if (!formularioFURAGRepository.existsById(responderPreguntasGEDTO.formularioFURAGID()))
+            throw new FormularioNotFoundException("Formulario FURAG con ID " + responderPreguntasGEDTO.formularioFURAGID() + " no fue encontrado");
         List<RespuestaGE> respuestasGEToSave = new ArrayList<>();
         responderPreguntasGEDTO.respuestasGEDTO().forEach(
                 crearRespuestaGEDTO -> {
+                    if (!preguntaGERepository.existsById(crearRespuestaGEDTO.preguntaGEID())) {
+                        throw new PreguntaGENotFoundException("El id de pregunta de gestion extendida " + crearRespuestaGEDTO.preguntaGEID() + " no fue encontrado");
+                    }
                     RespuestaGE respuestaGE = new RespuestaGE(
                             crearRespuestaGEDTO.evidencia(),
                             crearRespuestaGEDTO.opcion(),

@@ -43,4 +43,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleRespuestaGENotFoundException(RespuestaGENotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
+    @ExceptionHandler(FormularioSinRespuestasException.class)
+    public ResponseEntity<String> handleFormularioSinRespuestasException(FormularioSinRespuestasException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+    @ExceptionHandler(PreguntaGENotFoundException.class)
+    public ResponseEntity<String> handlePreguntaGENotFoundException(PreguntaGENotFoundException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
 }

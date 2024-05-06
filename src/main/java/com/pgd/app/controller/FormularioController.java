@@ -1,6 +1,7 @@
 package com.pgd.app.controller;
 
 
+import com.pgd.app.client.ChatGPTClient;
 import com.pgd.app.dto.Formulariofurag.CreateFormularioFURAGDTO;
 import com.pgd.app.dto.Formulariofurag.GetFormularioFURAGDTO;
 import com.pgd.app.dto.Formulariofurag.UpdateFormularioFURAGDTO;
@@ -30,6 +31,7 @@ public class FormularioController {
     private final FormularioFURAGRepository formularioFURAGRepository;
     private final FormularioFURAGService formularioFURAGService;
     private final PuntajeService puntajeService;
+    private final ChatGPTClient chatGPTClient;
 
     @Value("${ruta.archivo.plantilla}")
     private String rutaArchivoPlantilla;
@@ -37,10 +39,11 @@ public class FormularioController {
     @Value("${ruta.archivo.formulariogenerado}")
     private String rutaArchivoGenerado;
 
-    public FormularioController(FormularioFURAGRepository formularioFURAGRepository, FormularioFURAGService formularioFURAGService, PuntajeService puntajeService) {
+    public FormularioController(FormularioFURAGRepository formularioFURAGRepository, FormularioFURAGService formularioFURAGService, PuntajeService puntajeService, ChatGPTClient chatGPTClient) {
         this.formularioFURAGRepository = formularioFURAGRepository;
         this.formularioFURAGService = formularioFURAGService;
         this.puntajeService = puntajeService;
+        this.chatGPTClient = chatGPTClient;
     }
 
 
@@ -126,6 +129,11 @@ public class FormularioController {
         return ResponseEntity.ok().header(
                 HttpHeaders.CONTENT_DISPOSITION, "attachmente; filename=\"" + fileExcel.getName() + "\"")
                 .body(resource);
+    }
+
+    @PostMapping("api/testchatgpt")
+    public ResponseEntity<String> testchatGPT(@RequestParam String prompt) throws Exception {
+        return ResponseEntity.ok().body(chatGPTClient.promptObservaciones(prompt));
     }
 
 

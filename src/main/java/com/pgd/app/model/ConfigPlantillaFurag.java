@@ -19,7 +19,5 @@ public class ConfigPlantillaFurag {
     @Id
     String preguntaId;
 
-    String texto;
-
     int fila;
 }

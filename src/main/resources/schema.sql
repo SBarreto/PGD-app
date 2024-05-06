@@ -78,7 +78,6 @@ create table if not exists evidencia(
 
 create table if not exists config_plantilla_furag(
     pregunta_id varchar (255) not null,
-    texto varchar not null,
     fila int not null,
     primary key (pregunta_id)
 );
