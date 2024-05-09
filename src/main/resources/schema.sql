@@ -9,13 +9,25 @@ create table if not exists entidad (
     primary key (codigosigep)
 );
 
+create table if not exists municipio (
+    codigo bigserial not null,
+    nombre varchar not null,
+    primary key (codigo)
+);
+
+create table if not exists  departamento(
+    codigo bigserial not null,
+    nombre varchar not null,
+    primary key (codigo)
+);
+
 create table if not exists formulariofurag(
     id bigserial not null,
     vigencia date not null,
     entidad_id bigserial references entidad(codigosigep),
     primary key (id)
-
 );
+
 create table if not exists pregunta (
     id varchar(255) not null,
     enunciado varchar not null,
@@ -50,6 +62,7 @@ create table if not exists pregunta_ge(
 
 create table if not exists respuesta_ge(
     id uuid not null,
+    evidencia varchar,
     opcion boolean,
     pregunta_ge_id varchar(255) references pregunta_ge,
     formulario_id bigserial references formulariofurag,
@@ -57,13 +70,11 @@ create table if not exists respuesta_ge(
 );
 
 create table if not exists evidencia(
-    id uuid not null DEFAULT gen_random_uuid(),
+    id uuid not null,
     texto varchar not null,
-    alerta varchar,
-    respuestage_id uuid references respuesta_ge,
-    formulariofurag_id bigserial references formulariofurag,
+    respuesta_id uuid references respuesta,
     primary key (id)
-    );
+);
 
 create table if not exists config_plantilla_furag(
     pregunta_id varchar (255) not null,
@@ -72,7 +83,7 @@ create table if not exists config_plantilla_furag(
 );
 
 create table if not exists puntaje (
-    id uuid not null DEFAULT gen_random_uuid(),
+    id uuid not null,
     valor numeric(5, 2) not null,
     categoria varchar not null,
     vigencia date not null,

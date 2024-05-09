@@ -1,7 +1,10 @@
 package com.pgd.app.controller;
 
+import com.pgd.app.dto.ge.ResponderPreguntasGEDTO;
 import com.pgd.app.dto.RespuestasFormularioDTO;
 import com.pgd.app.repository.RespuestaRepository;
+import com.pgd.app.service.RespuestaGEService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,9 +13,11 @@ import java.util.List;
 public class RespuestaController {
 
     private final RespuestaRepository respuestaRepository;
+    private final RespuestaGEService respuestaGEService;
 
-    public RespuestaController(RespuestaRepository respuestaRepository) {
+    public RespuestaController(RespuestaRepository respuestaRepository, RespuestaGEService respuestaGEService) {
         this.respuestaRepository = respuestaRepository;
+        this.respuestaGEService = respuestaGEService;
     }
 
     @GetMapping("/api/respuestas/{idformulario}")
@@ -25,6 +30,12 @@ public class RespuestaController {
                                respuesta.getPregunta().getId(),
                                 respuesta.getVersion()
                         )).toList();
+    }
+
+    @Operation(summary = "Crear Respuestas de Gestion Extendida para preguntas de un formulario")
+    @PostMapping("/api/respuestas/responderpreguntasge")
+    public void crearRespuesta(@RequestBody ResponderPreguntasGEDTO responderPreguntasGEDTO) {
+        respuestaGEService.crearRespuestasPreguntaGE(responderPreguntasGEDTO);
     }
 
 }

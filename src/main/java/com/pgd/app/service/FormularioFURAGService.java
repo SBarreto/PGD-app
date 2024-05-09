@@ -1,11 +1,9 @@
 package com.pgd.app.service;
 
 import com.pgd.app.client.ChatGPTClient;
-import com.pgd.app.dto.PreguntaDTO;
-import com.pgd.app.dto.formulariofurag.GetFormularioFURAGDTO;
 import com.pgd.app.exception.EntidadNotFoundException;
 import com.pgd.app.exception.FormularioNotFoundException;
-import com.pgd.app.dto.formulariofurag.CreateFormularioFURAGDTO;
+import com.pgd.app.dto.Formulariofurag.CreateFormularioFURAGDTO;
 import com.pgd.app.exception.FormularioSinRespuestasException;
 import com.pgd.app.model.*;
 import com.pgd.app.repository.*;
@@ -44,7 +42,7 @@ public class FormularioFURAGService {
         this.chatGPTClient = chatGPTClient;
     }
 
-    public GetFormularioFURAGDTO guardarFormularioFURAG(CreateFormularioFURAGDTO formularioFURAGDTO) {
+    public void guardarFormularioFURAG(CreateFormularioFURAGDTO formularioFURAGDTO) {
 
         FormularioFURAG formularioFURAG = new FormularioFURAG(formularioFURAGDTO.vigencia());
         formularioFURAG.setEntidad(entidadRepository.findById(formularioFURAGDTO.codigoEntidad())
@@ -67,18 +65,7 @@ public class FormularioFURAGService {
                         }
                 )
         );
-        FormularioFURAG formularioFURAGToReturn = formularioFURAGRepository.save(formularioFURAG);
-        return new GetFormularioFURAGDTO(
-                formularioFURAGToReturn.getId(),
-                formularioFURAGToReturn.getVigencia(),
-                formularioFURAGToReturn.getPreguntas().stream().map(
-                        pregunta -> new PreguntaDTO(
-                                pregunta.getId(),
-                                pregunta.getEnunciado(),
-                                pregunta.getElemento()
-                        )
-                ).toList()
-        );
+        formularioFURAGRepository.save(formularioFURAG);
     }
 
     public File generarArchivoFurag(String sourceFilePath, String destinationFilePath, Long formularioFURAGId) throws IOException {
@@ -86,7 +73,7 @@ public class FormularioFURAGService {
 
         //primero: copiar el archivo plantilla y crear workbook con el nuevo
         //segundo: localizar columna preguntas y observaciones
-        //para cada pregunta, traer campo respuestaGE de repositorio y poner en columna observaciones para esa pregunta
+        //para cada pregunta, traer campo respuesta de repositorio y poner en columna observaciones para esa pregunta
 
         File sourceFile = new File(sourceFilePath);
         File destinationFile = new File(destinationFilePath);
@@ -135,7 +122,7 @@ public class FormularioFURAGService {
         //segundo: para cada pregunta, se deben tomar las preguntas de gestion extendida asociadas respondidas
         //tercero: para cada pregunta de gestion extendida, se debe saber las respuestas de gestion extendida
         //cuarto: generar el campo/evidencia de obervaciones:
-        //incluir que se tomaron acciones dependiendo de la respuestaGE positiva de cada pregunta de gestion extendida
+        //incluir que se tomaron acciones dependiendo de la respuesta positiva de cada pregunta de gestion extendida
         //incluir el link de las evidencias que el usuario adjuntó
         //quinto: generar el campo de puntaje:
         //puntaje va de 0 a 100, (#respuestasGEPositivas*100)/#preguntasGE

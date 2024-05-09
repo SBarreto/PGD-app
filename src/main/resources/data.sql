@@ -14,6 +14,7 @@ values (2,
         '11001',
         11);
 
+
 insert into formulariofurag
 values (1,
         '2022-01-01',
@@ -143,22 +144,14 @@ values ('GDI260AGE1', 'Los programas o proyectos asociados a interoperabilidad i
        ('GDI262GGE3', 'Los proyectos de transformación digital formulados o ejecutados, relacionados con promover capacidades de inteligencia artificial, Internet de las Cosas, Big Data y Blockchain, contemplan actividades y entregables asociados a cultura y apropiación?', 'evidencia sugerida pdf', 'rol sugerido xxxx', 'GDI262G');
 
 insert into respuesta_ge
-values ('840beb59-1bf0-4e59-9f40-409abfd8aa89', true, 'GDI260AGE1', 1),
-       ('e534a955-b17e-4365-b0f9-031af13d881f', false, 'GDI260AGE2', 1),
-       ('39163a75-80f7-4d9a-b5c3-66eeea76c3d9', true, 'GDI260AGE3', 1);
+values (gen_random_uuid(), 'evidencia de esta respuesta', true, 'GDI260AGE1', 1),
+       (gen_random_uuid(), 'evidencia de esta respuesta', false, 'GDI260AGE2', 1),
+       (gen_random_uuid(), 'evidencia de esta respuesta', true, 'GDI260AGE3', 1);
 
 insert into respuesta_ge
-values ('f08f7fd6-1a50-433b-9d37-d8a9197e72d5', true, 'GDI260AGE1', 2),
-       ('89886726-e6de-49e2-af0b-a572013d53a0', false, 'GDI260AGE2', 2),
-       ('e160d40f-89a1-4b66-9e2c-4821374c31c2', true, 'GDI260AGE3', 2);
-
-insert into evidencia (id, texto, respuestage_id, formulariofurag_id)
-values (gen_random_uuid(), 'evidencia1', '840beb59-1bf0-4e59-9f40-409abfd8aa89', 1),
-       (gen_random_uuid(), 'evidencia2', 'e534a955-b17e-4365-b0f9-031af13d881f', 1),
-       (gen_random_uuid(), 'evidencia3', '39163a75-80f7-4d9a-b5c3-66eeea76c3d9', 1),
-       (gen_random_uuid(), 'evidencia4', 'f08f7fd6-1a50-433b-9d37-d8a9197e72d5', 1),
-       (gen_random_uuid(), 'evidencia5', '89886726-e6de-49e2-af0b-a572013d53a0', 1),
-       (gen_random_uuid(), 'evidencia6', 'e160d40f-89a1-4b66-9e2c-4821374c31c2', 1);
+values (gen_random_uuid(), 'evidencia de esta respuesta', true, 'GDI260AGE1', 2),
+       (gen_random_uuid(), 'evidencia de esta respuesta', false, 'GDI260AGE2', 2),
+       (gen_random_uuid(), 'evidencia de esta respuesta', true, 'GDI260AGE3', 2);
 
 insert into puntaje
 values (gen_random_uuid(), 78, 'Transformacion Digital', '2017-03-14', 2);

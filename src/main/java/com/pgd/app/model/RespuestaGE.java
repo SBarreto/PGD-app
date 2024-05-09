@@ -20,6 +20,8 @@ public class RespuestaGE {
     @GeneratedValue(generator = "UUID")
     private UUID id;
 
+    private String evidencia;
+
     private boolean opcion;
 
     @ManyToOne
@@ -30,10 +32,8 @@ public class RespuestaGE {
     @JoinColumn(name = "formulario_id")
     private FormularioFURAG formularioFURAG;
 
-    @OneToOne(mappedBy = "respuestaGE", cascade = CascadeType.ALL)
-    private Evidencia evidencia;
-
-    public RespuestaGE(boolean opcion, PreguntaGE preguntaGE, FormularioFURAG formularioFURAG) {
+    public RespuestaGE(String texto, boolean opcion, PreguntaGE preguntaGE, FormularioFURAG formularioFURAG) {
+        this.evidencia = texto;
         this.opcion = opcion;
         this.preguntaGE = preguntaGE;
         this.formularioFURAG = formularioFURAG;
