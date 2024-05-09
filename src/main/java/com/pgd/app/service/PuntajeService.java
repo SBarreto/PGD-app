@@ -50,7 +50,7 @@ public class PuntajeService {
         //Tomar las respuestas guardadas de un formulario
         //Tomar el "elemento" que es lo mismo que la categoria de las preguntas respondidas
             //para esto, dividir todas las respuestas del formulario en subgrupos por categoria
-        //tomar todos los puntajes individuales de cada respuesta y promediarlas en cada categoria
+        //tomar todos los puntajes individuales de cada respuestaGE y promediarlas en cada categoria
         //guarcar en la tabla puntaje con los datos pertinentes
 
 

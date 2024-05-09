@@ -1,4 +1,4 @@
-package com.pgd.app.dto.Formulariofurag;
+package com.pgd.app.dto.formulariofurag;
 
 
 import com.pgd.app.dto.PreguntaDTO;
