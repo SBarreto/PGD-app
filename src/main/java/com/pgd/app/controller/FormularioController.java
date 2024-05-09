@@ -1,10 +1,8 @@
 package com.pgd.app.controller;
 
-
-import com.pgd.app.client.ChatGPTClient;
-import com.pgd.app.dto.Formulariofurag.CreateFormularioFURAGDTO;
-import com.pgd.app.dto.Formulariofurag.GetFormularioFURAGDTO;
-import com.pgd.app.dto.Formulariofurag.UpdateFormularioFURAGDTO;
+import com.pgd.app.dto.formulariofurag.CreateFormularioFURAGDTO;
+import com.pgd.app.dto.formulariofurag.GetFormularioFURAGDTO;
+import com.pgd.app.dto.formulariofurag.UpdateFormularioFURAGDTO;
 import com.pgd.app.dto.PreguntaDTO;
 import com.pgd.app.model.FormularioFURAG;
 import com.pgd.app.model.Pregunta;
@@ -31,7 +29,6 @@ public class FormularioController {
     private final FormularioFURAGRepository formularioFURAGRepository;
     private final FormularioFURAGService formularioFURAGService;
     private final PuntajeService puntajeService;
-    private final ChatGPTClient chatGPTClient;
 
     @Value("${ruta.archivo.plantilla}")
     private String rutaArchivoPlantilla;
@@ -39,11 +36,10 @@ public class FormularioController {
     @Value("${ruta.archivo.formulariogenerado}")
     private String rutaArchivoGenerado;
 
-    public FormularioController(FormularioFURAGRepository formularioFURAGRepository, FormularioFURAGService formularioFURAGService, PuntajeService puntajeService, ChatGPTClient chatGPTClient) {
+    public FormularioController(FormularioFURAGRepository formularioFURAGRepository, FormularioFURAGService formularioFURAGService, PuntajeService puntajeService) {
         this.formularioFURAGRepository = formularioFURAGRepository;
         this.formularioFURAGService = formularioFURAGService;
         this.puntajeService = puntajeService;
-        this.chatGPTClient = chatGPTClient;
     }
 
 
@@ -87,13 +83,13 @@ public class FormularioController {
 
     @Operation(summary = "Crear un nuevo formulario FURAG, puede venir con preguntas")
     @PostMapping("/api/formulario")
-    public void createFormularioFURAG(@RequestBody CreateFormularioFURAGDTO formularioFURAGDTO) {
-        formularioFURAGService.guardarFormularioFURAG(formularioFURAGDTO);
+    public GetFormularioFURAGDTO createFormularioFURAG(@RequestBody CreateFormularioFURAGDTO formularioFURAGDTO) {
+        return formularioFURAGService.guardarFormularioFURAG(formularioFURAGDTO);
     }
 
     @Operation(summary = "Editar un formulario FURAG o sus preguntas")
     @PutMapping("/api/formulario")
-    public void deleteFormularioFURAG(@RequestBody UpdateFormularioFURAGDTO updateFormularioFURAGDTO) {
+    public void editFormularioFURAG(@RequestBody UpdateFormularioFURAGDTO updateFormularioFURAGDTO) {
 
         FormularioFURAG formularioFURAG = new FormularioFURAG();
         formularioFURAG.setId(updateFormularioFURAGDTO.id());
@@ -130,11 +126,5 @@ public class FormularioController {
                 HttpHeaders.CONTENT_DISPOSITION, "attachmente; filename=\"" + fileExcel.getName() + "\"")
                 .body(resource);
     }
-
-    @PostMapping("api/testchatgpt")
-    public ResponseEntity<String> testchatGPT(@RequestParam String prompt) throws Exception {
-        return ResponseEntity.ok().body(chatGPTClient.promptObservaciones(prompt));
-    }
-
 
 }

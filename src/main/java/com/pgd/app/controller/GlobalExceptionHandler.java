@@ -53,4 +53,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handlePreguntaGENotFoundException(PreguntaGENotFoundException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+
+    @ExceptionHandler(EvidenciaNotFoundException.class)
+    public ResponseEntity<String> handleEvidenciaNotFoundException(EvidenciaNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
 }

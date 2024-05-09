@@ -1,5 +1,6 @@
 package com.pgd.app.service;
 
+import com.pgd.app.dto.ge.GetPreguntaGEDTO;
 import com.pgd.app.exception.PreguntaFURAGNotFoundException;
 import com.pgd.app.dto.ge.CrearPreguntaGEDTO;
 import com.pgd.app.model.Pregunta;
@@ -22,19 +23,26 @@ public class PreguntasGEService {
         this.preguntaRepository = preguntaRepository;
     }
 
-    public void crearPreguntaGE(CrearPreguntaGEDTO crearPreguntaGEDTO, String preguntaFuragId) {
+    public GetPreguntaGEDTO crearPreguntaGE(CrearPreguntaGEDTO crearPreguntaGEDTO, String preguntaFuragId) {
         Pregunta pregunta = preguntaRepository.findById(preguntaFuragId).orElseThrow(
                 () -> new PreguntaFURAGNotFoundException("Id de pregunta FURAG no encontrado"));
         PreguntaGE preguntaGE = new PreguntaGE(
-                preguntaFuragId+"GE"+(Math.round(Math.random() * 100)),
+                preguntaFuragId+"GE"+(Math.round(Math.random() * 1000)),
                 crearPreguntaGEDTO.enunciado(),
                 crearPreguntaGEDTO.evidenciaSugerida(),
                 crearPreguntaGEDTO.rolSugerido(),
                 pregunta);
-        preguntaGERepository.save(preguntaGE);
+        preguntaGE = preguntaGERepository.save(preguntaGE);
+        return new GetPreguntaGEDTO(
+                preguntaGE.getId(),
+                preguntaGE.getEnunciado(),
+                preguntaGE.getEvidenciaSugerida(),
+                preguntaGE.getRolSugerido(),
+                preguntaGE.getPregunta().getId()
+        );
     }
 
-    public void crearPreguntasGE(List<CrearPreguntaGEDTO> crearPreguntasGEDTO, String preguntaFuragId) {
+    public List<GetPreguntaGEDTO> crearPreguntasGE(List<CrearPreguntaGEDTO> crearPreguntasGEDTO, String preguntaFuragId) {
         Pregunta pregunta = preguntaRepository.findById(preguntaFuragId).orElseThrow(
                 () -> new PreguntaFURAGNotFoundException("Id de pregunta FURAG no encontrado"));
         List<PreguntaGE> preguntasGEToSave = new ArrayList<>();
@@ -50,7 +58,15 @@ public class PreguntasGEService {
                     preguntasGEToSave.add(preguntaGE);
                 }
         );
-        preguntaGERepository.saveAll(preguntasGEToSave);
+        return preguntaGERepository.saveAll(preguntasGEToSave).stream().map(
+                preguntaGE -> new GetPreguntaGEDTO(
+                        preguntaGE.getId(),
+                        preguntaGE.getEnunciado(),
+                        preguntaGE.getEvidenciaSugerida(),
+                        preguntaGE.getRolSugerido(),
+                        preguntaGE.getPregunta().getId()
+                )
+        ).toList();
     }
 
 }
