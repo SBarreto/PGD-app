@@ -10,4 +10,5 @@ public interface FormularioFURAGRepository extends JpaRepository<FormularioFURAG
 
     List<FormularioFURAG> findAll();
     Optional<FormularioFURAG> findById(Long id);
+    List<FormularioFURAG> findAllByEntidad_Codigosigep(Long codigosigep);
 }

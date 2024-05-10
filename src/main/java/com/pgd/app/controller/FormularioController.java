@@ -43,11 +43,11 @@ public class FormularioController {
     }
 
 
-    @Operation(summary = "Tomar todos los formularios, este endpoint es mas de prueba, no va a haber caso de uso real para traer todos los formularios guardados")
-    @GetMapping("/api/formularios")
-    public List<GetFormularioFURAGDTO> getAllFormularios() {
+    @Operation(summary = "Tomar todos los formularios de una entidad")
+    @GetMapping("/api/formularios/{codigoentidad}")
+    public List<GetFormularioFURAGDTO> getAllFormulariosFromEntidad(@PathVariable Long codigoentidad) {
 
-        return formularioFURAGRepository.findAll().stream().map(
+        return formularioFURAGRepository.findAllByEntidad_Codigosigep(codigoentidad).stream().map(
                 formularioFURAG -> new GetFormularioFURAGDTO(
                         formularioFURAG.getId(),
                         formularioFURAG.getVigencia(),
