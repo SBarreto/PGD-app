@@ -10,6 +10,7 @@ import com.pgd.app.repository.FormularioFURAGRepository;
 import com.pgd.app.service.FormularioFURAGService;
 import com.pgd.app.service.PuntajeService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -24,6 +25,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
+@Valid
 public class FormularioController {
 
     private final FormularioFURAGRepository formularioFURAGRepository;
@@ -83,7 +85,7 @@ public class FormularioController {
 
     @Operation(summary = "Crear un nuevo formulario FURAG, puede venir con preguntas")
     @PostMapping("/api/formulario")
-    public GetFormularioFURAGDTO createFormularioFURAG(@RequestBody CreateFormularioFURAGDTO formularioFURAGDTO) {
+    public GetFormularioFURAGDTO createFormularioFURAG(@Valid @RequestBody CreateFormularioFURAGDTO formularioFURAGDTO) {
         return formularioFURAGService.guardarFormularioFURAG(formularioFURAGDTO);
     }
 
