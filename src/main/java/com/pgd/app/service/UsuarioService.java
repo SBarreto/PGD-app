@@ -1,5 +1,6 @@
 package com.pgd.app.service;
 
+import com.pgd.app.dto.usuario.RetornarUsuarioDTO;
 import com.pgd.app.exception.ContrasenaIncorrectaException;
 import com.pgd.app.exception.EntidadNotFoundException;
 import com.pgd.app.exception.UsuarioNoEncontradoException;
@@ -37,11 +38,19 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-    public void login(LoginDTO loginDTO) {
+    public RetornarUsuarioDTO login(LoginDTO loginDTO) {
 
         if (!usuarioRepository.existsByUsername(loginDTO.username()))
             throw new UsuarioNoEncontradoException("Usuario no encontrado");
         if (!usuarioRepository.findByUsername(loginDTO.username()).getPassword().equals(loginDTO.password()))
             throw new ContrasenaIncorrectaException("Contrasena Incorrecta");
+
+        Usuario usuario = usuarioRepository.findByUsername(loginDTO.username());
+        return new RetornarUsuarioDTO(
+                usuario.getUsername(),
+                usuario.getTipo(),
+                usuario.getEntidad().getCodigosigep()
+        );
+
     }
 }

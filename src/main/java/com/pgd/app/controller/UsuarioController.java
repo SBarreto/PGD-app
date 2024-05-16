@@ -2,6 +2,7 @@ package com.pgd.app.controller;
 
 import com.pgd.app.dto.usuario.CrearUsuarioDTO;
 import com.pgd.app.dto.usuario.LoginDTO;
+import com.pgd.app.dto.usuario.RetornarUsuarioDTO;
 import com.pgd.app.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +29,7 @@ public class UsuarioController {
 
     @Operation(summary = "Hacer login con un usuario existente")
     @PostMapping("/api/usuario/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
-
-        usuarioService.login(loginDTO);
-        return ResponseEntity.ok("Login exitoso");
+    public ResponseEntity<RetornarUsuarioDTO> login(@RequestBody LoginDTO loginDTO) {
+        return ResponseEntity.ok(usuarioService.login(loginDTO));
     }
 }
