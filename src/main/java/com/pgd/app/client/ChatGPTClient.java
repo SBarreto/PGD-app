@@ -4,6 +4,7 @@ import com.pgd.app.dto.chatgpt.ChatGPTRequest;
 import com.pgd.app.dto.chatgpt.ChatGPTResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -27,8 +28,13 @@ public class ChatGPTClient {
     }
 
     public String promptObservaciones(String prompt) {
-        ChatGPTRequest request = new ChatGPTRequest(model, prompt, temperature, maxTokens);
-        ChatGPTResponse chatGPTResponse = restTemplate.postForObject(apiUrl, request, ChatGPTResponse.class);
-        return chatGPTResponse.choices().get(0).message().content();
+        try {
+            ChatGPTRequest request = new ChatGPTRequest(model, prompt, temperature, maxTokens);
+            ChatGPTResponse chatGPTResponse = restTemplate.postForObject(apiUrl, request, ChatGPTResponse.class);
+            return chatGPTResponse.choices().get(0).message().content();
+        } catch (HttpClientErrorException e) {
+            return "N/A";
+        }
+
     }
 }
