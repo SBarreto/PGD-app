@@ -171,7 +171,7 @@ public class FormularioFURAGService {
                                                             .append(preguntaGE.getEnunciado())
                                                             .append("\n");
                                                     stringBuilderEvidencias
-                                                            .append(respuestaGE.getEvidencia())
+                                                            .append(respuestaGE.getEvidencia().getTexto())
                                                             .append("\n");
                                                     numPositivas.getAndIncrement();
                                                 }

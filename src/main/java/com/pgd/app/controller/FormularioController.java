@@ -125,7 +125,8 @@ public class FormularioController {
         Resource resource = new FileSystemResource(fileExcel);
 
         return ResponseEntity.ok().header(
-                HttpHeaders.CONTENT_DISPOSITION, "attachmente; filename=\"" + fileExcel.getName() + "\"")
+                HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileExcel.getName() + "\"")
+                .header(HttpHeaders.CONTENT_TYPE, "application/octet-stream")
                 .body(resource);
     }
 
