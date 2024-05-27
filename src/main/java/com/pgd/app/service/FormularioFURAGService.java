@@ -11,6 +11,7 @@ import com.pgd.app.model.*;
 import com.pgd.app.repository.*;
 import jakarta.transaction.Transactional;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -100,10 +101,15 @@ public class FormularioFURAGService {
             Sheet sheet = workbook.getSheetAt(2);
             FileOutputStream fos = new FileOutputStream(destinationFilePath);
 
+            CellStyle cs = workbook.createCellStyle();
+            cs.setWrapText(true);
+
             //Generar observaciones
             Set<Respuesta> respuestasPlantillaActual = respuestaRepository.findAllByFormularioFURAG_Id(formularioFURAGId);
             for (ConfigPlantillaFurag preguntaPlantilla : configPlantillaFuragRepository.findAll()) {
                 Row row = sheet.getRow(preguntaPlantilla.getFila());
+
+
                 //columna de observaciones
                 Cell cellObservaciones = row.getCell(6);
                 //columna de puntaje
@@ -113,13 +119,17 @@ public class FormularioFURAGService {
                             if (respuesta.getPregunta().getId().equals(preguntaPlantilla.getPreguntaId()) && respuesta.getPuntaje() != 0) {
                                 cellObservaciones.setCellValue(respuesta.getTexto());
                                 cellPuntaje.setCellValue(respuesta.getPuntaje());
+                                cellObservaciones.setCellStyle(cs);
                             }
                         }
                 );
             }
 
-            sheet.autoSizeColumn(5);
-            sheet.autoSizeColumn(6);
+            sheet.setColumnWidth(5, 10*256);
+            sheet.setColumnWidth(6, 60*256);
+            //sheet.autoSizeColumn(5);
+            //sheet.autoSizeColumn(6);
+            XSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
             //Generar puntajes
             workbook.write(fos);
             //cerrar todos los flujos

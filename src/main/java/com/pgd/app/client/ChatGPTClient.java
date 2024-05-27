@@ -33,7 +33,7 @@ public class ChatGPTClient {
             ChatGPTResponse chatGPTResponse = restTemplate.postForObject(apiUrl, request, ChatGPTResponse.class);
             return chatGPTResponse.choices().get(0).message().content();
         } catch (HttpClientErrorException e) {
-            return "N/A";
+            return "N/A ";
         }
 
     }
