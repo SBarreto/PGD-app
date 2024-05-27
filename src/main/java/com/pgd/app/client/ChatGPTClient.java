@@ -20,7 +20,7 @@ public class ChatGPTClient {
     @Value("${openai.chatgtp.max_tokens}")
     private int maxTokens;
 
-    @Value("${openai.chatgtp.api.url}")
+    @Value("${OPENAI_KEY}")
     private String apiUrl;
 
     public ChatGPTClient(RestTemplate restTemplate) {
