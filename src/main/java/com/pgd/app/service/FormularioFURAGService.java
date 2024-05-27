@@ -195,13 +195,16 @@ public class FormularioFURAGService {
                     respuesta.setPregunta(pregunta);
 
                     //Construir las observaciones con chatgpt y luego adjuntar links de evidencias si la pregunta tiene respuestas
-                    if (preguntaGEHasRespuestas.get()) {
+                    if (preguntaGEHasRespuestas.get() && numPositivas.get() > 0) {
                         String respuestasYEvidencias = chatGPTClient.promptObservaciones(String.valueOf(stringBuilderOberservaciones)) +
                                 "\n" +
                                 stringBuilderEvidencias;
                         respuesta.setTexto(respuestasYEvidencias);
-                    } else
+                    } else if (preguntaGEHasRespuestas.get()) {
+                        respuesta.setTexto("Todas las respuestas de gestion extendida para esta pregunta fueron negativas.");
+                    } else {
                         respuesta.setTexto("No existen respuestas de gestion extendida para esta pregunta ni evidencias.");
+                    }
 
                     if (preguntaGEHasRespuestas.get() && numPositivas.get() > 0) {
                         puntajeCalculado = (numPositivas.get() * 100) / pregunta.getPreguntasGE().size();
